@@ -3,6 +3,9 @@ Servo myservo;
 
 const int SERVO_PIN = 12;
 
+//const int trigPin = placeHolder; Determine what pin these should be
+//const int echoPin = placeHolder;
+
 const int BUTTON_PIN_2 = 2;
 const int BUTTON_PIN_3 = 3;
 const int BUTTON_PIN_4 = 4;
@@ -33,6 +36,9 @@ void setup() {
   pinMode(BUTTON_PIN_4, INPUT_PULLUP);
   pinMode(BUTTON_PIN_5, INPUT_PULLUP);
   
+  pinMode(trigPin, OUTPUT); // <---trig
+  pinMode(echoPin, INPUT);  // <---echo
+	
   for (int i = 0; i < 4; i++) {
     pinMode(ledPins[i], OUTPUT);
   }
@@ -45,6 +51,37 @@ void setup() {
   Serial.println("Press any button to start.");
 }
 
+bool elevatorReset(int distanceCM){
+  bool isElevatorReset = false;
+  do{
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH); // Sets the trigPin on HIGH state for 10 micro seconds
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    duration = pulseIn(echoPin, HIGH);   // Reads the echoPin, returns the sound wave travel time in microseconds
+    // Calculating the distance
+    distance = duration * 0.034 / 2;
+    // Prints the distance on the Serial Monitor
+    //Serial.print("Distance: "); 		Don't need the console to spam this
+    //Serial.println(distance);
+    myServo.writeMicroseconds(1700); 		//Not sure what value would reverse the motor to to go down	
+    if (distance == userCM){
+      myServo.writeMicroseconds(1500);
+      Serial.println("You reached ");
+      Serial.print(distanceCM);
+      Serial.print(" CM");
+      isElevatorReset = true;
+      return isElevatoReset;
+    } while(distance != distanceCM);
+}
+
+
+
+
+
+
+
 void loop() {
   if (currentLevel > 5) {
     Serial.println("Game over!");
@@ -55,7 +92,7 @@ void loop() {
       delay(1000);
       myservo.writeMicroseconds(1500); // stop the motor
     } else {
-      myservo.writeMicroseconds(1300); // rotate in the opposite direction
+       // rotate in the opposite direction
       delay(1000);
       myservo.writeMicroseconds(1500); // stop the motor
     }

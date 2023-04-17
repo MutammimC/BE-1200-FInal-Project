@@ -51,7 +51,7 @@ void setup() {
   Serial.println("Press any button to start.");
 }
 
-bool elevatorReset(int distanceCM){
+bool elevatorReset(int distanceCM){ //If the sensor is protruding from the bottom then level 0 is 8
   bool isElevatorReset = false;
   do{
     digitalWrite(trigPin, LOW);
@@ -75,12 +75,6 @@ bool elevatorReset(int distanceCM){
       return isElevatoReset;
     } while(distance != distanceCM);
 }
-
-
-
-
-
-
 
 void loop() {
   if (currentLevel > 5) {
